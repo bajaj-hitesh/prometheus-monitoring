@@ -2,8 +2,8 @@ const express = require('express');
 const db = require('./db');
 const { register, metricsMiddleware } = require('./metrics');
 
+// Create Express app
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
@@ -75,12 +75,6 @@ app.post('/api/users', (req, res) => {
   );
 });
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`Metrics available at http://localhost:${PORT}/metrics`);
-});
-
 // Handle graceful shutdown
 process.on('SIGTERM', () => {
   console.log('SIGTERM signal received: closing HTTP server');
@@ -92,3 +86,15 @@ process.on('SIGTERM', () => {
     process.exit(0);
   });
 });
+
+// For local development
+if (require.main === module) {
+  const application_port = process.env.application_port || 3000;
+  app.listen(application_port, () => {
+    console.log(`Server running on port ${application_port}`);
+    console.log(`Metrics available at http://localhost:${application_port}/metrics`);
+  });
+}
+
+// Export for Knative Functions
+module.exports = app;
