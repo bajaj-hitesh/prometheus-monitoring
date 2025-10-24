@@ -4,19 +4,15 @@ runtime: node
 registry: ""
 image: ""
 imageDigest: ""
-created: 2025-10-24T18:11:00.000Z
+created: 2025-10-24T18:13:00.000Z
 invoke: http
 build:
-  buildpacks:
-    - paketo-buildpacks/nodejs
-  builder: pack
+  builder: s2i
   buildEnvs:
-    - name: BP_NODE_RUN_SCRIPTS
-      value: "build"
-    - name: BP_NODE_OPTIMIZE_MEMORY
-      value: "true"
     - name: NODE_ENV
       value: "production"
+    - name: NPM_RUN
+      value: "start"
 run:
   volumes:
     - path: /data
