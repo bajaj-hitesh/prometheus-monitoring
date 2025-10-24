@@ -21,13 +21,13 @@ run:
       size: 1Gi
   envs:
     - name: application_port
-      value: "8080"
+      value: "3000"
     - name: NODE_ENV
       value: "production"
   annotations:
     prometheus.io/scrape: "true"
     prometheus.io/path: "/metrics"
-    prometheus.io/port: "8080"
+    prometheus.io/port: "3000"
 deploy:
   namespace: default
   healthEndpoints:
