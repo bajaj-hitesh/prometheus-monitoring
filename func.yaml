@@ -1,0 +1,54 @@
+specVersion: 0.35.0
+name: node-api-app
+runtime: node
+registry: ""
+image: ""
+imageDigest: ""
+created: 2025-10-24T18:11:00.000Z
+invoke: http
+build:
+  buildpacks:
+    - paketo-buildpacks/nodejs
+  builder: pack
+  buildEnvs:
+    - name: BP_NODE_RUN_SCRIPTS
+      value: "build"
+    - name: BP_NODE_OPTIMIZE_MEMORY
+      value: "true"
+    - name: NODE_ENV
+      value: "production"
+run:
+  volumes:
+    - path: /data
+      name: data-volume
+      type: pvc
+      size: 1Gi
+  envs:
+    - name: PORT
+      value: "8080"
+    - name: NODE_ENV
+      value: "production"
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: "/metrics"
+    prometheus.io/port: "8080"
+deploy:
+  namespace: default
+  healthEndpoints:
+    liveness: /
+    readiness: /
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  scaling:
+    minScale: 1
+    maxScale: 5
+    metric: concurrency
+    target: 100
+    utilization: 70
+
+# Made with Bob
